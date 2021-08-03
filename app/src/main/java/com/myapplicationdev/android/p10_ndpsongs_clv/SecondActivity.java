@@ -19,7 +19,6 @@ public class SecondActivity extends AppCompatActivity {
 	ListView lv;
     ArrayList<Song> songList;
 
-	String moduleCode;
 	int requestCode = 9;
     Button btn5Stars;
     CustomAdapter ca;
@@ -54,6 +53,7 @@ public class SecondActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(SecondActivity.this, ThirdActivity.class);
                 i.putExtra("song", songList.get(position));
+                startActivity(i);
                 startActivityForResult(i, requestCode);
             }
         });
@@ -76,7 +76,7 @@ public class SecondActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 DBHelper dbh = new DBHelper(SecondActivity.this);
                 songList.clear();
-                songList.addAll(dbh.getAllSongsByYear(Integer.valueOf(years.get(position))));
+                songList.addAll(dbh.getAllSongsByStars(5));
                 ca.notifyDataSetChanged();
             }
 
@@ -96,6 +96,10 @@ public class SecondActivity extends AppCompatActivity {
             songList.addAll(dbh.getAllSongs());
             dbh.close();
             ca.notifyDataSetChanged();
+
+            years.clear();
+            years.addAll(dbh.getYears());
+            spinnerAdapter.notifyDataSetChanged();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
